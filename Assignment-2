@@ -1,0 +1,37 @@
+## The inversed matrix is being cached
+## Calculating an inversed matrix is time consuming. Caching the inverse will 
+## save a lot of time.
+## These functions below create a special object that saves the matrix and
+## caches the inverted matrix
+
+makeCacheMatrix <- function(x = matrix()) {
+        inv <- NULL
+        set <- function(y) {
+                x <<- y
+                inv <<- NULL
+        }
+        get <- function() x
+        setInverse <- function(inverse) inv <<- inverse
+        getInverse <- function() inv
+        list(set = set,
+             get = get,
+             setInverse = setInverse,
+             getInverse = getInverse)
+}
+
+
+## This function calculates the inversion of the matrix we created with the function above.
+## If the inversed matrix is already computed, then the inversion is retrieved from the
+## cache
+
+cacheSolve <- function(x, ...) {
+        inv <- x$getInverse()
+        if (!is.null(inv)) {
+                message("getting cached data")
+                return(inv)
+        }
+        mat <- x$get()
+        inv <- solve(mat, ...)
+        x$setInverse(inv)
+        inv
+}
